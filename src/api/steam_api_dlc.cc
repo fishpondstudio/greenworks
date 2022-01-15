@@ -56,10 +56,12 @@ NAN_METHOD(GetCurrentBetaName) {
     Nan::HandleScope scope;
     char buffer[128];
     auto is_beta = SteamApps()->GetCurrentBetaName(buffer, sizeof(buffer));
-    v8::Local<v8::Object> result = Nan::New<v8::Object>();
-    Nan::Set(result, Nan::New("betaName").ToLocalChecked(), Nan::New(buffer).ToLocalChecked());
-    Nan::Set(result, Nan::New("isBeta").ToLocalChecked(), Nan::New(is_beta));
-    info.GetReturnValue().Set(result);
+    if (is_beta) {
+        info.GetReturnValue().Set(Nan::New(buffer).ToLocalChecked());
+    }
+    else {
+        info.GetReturnValue().SetUndefined();
+    }
 }
 
 NAN_METHOD(InstallDLC) {
